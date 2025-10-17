@@ -1,0 +1,443 @@
+{
+  "info": {
+    "name": "IoT Project API",
+    "description": "API Documentation for IoT Smart Home Project with ESP32, Node.js, React, MQTT, and Socket.IO",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "iot-project-api-collection",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Sensor APIs",
+      "item": [
+        {
+          "name": "Get Latest Sensor Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/sensors/latest",
+              "host": ["{{base_url}}"],
+              "path": ["sensors", "latest"]
+            },
+            "description": "Lấy dữ liệu sensor mới nhất (nhiệt độ, độ ẩm, ánh sáng)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sensor History - All Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/sensors/history?limit=100",
+              "host": ["{{base_url}}"],
+              "path": ["sensors", "history"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Number of records to return"
+                }
+              ]
+            },
+            "description": "Lấy tất cả lịch sử sensor data"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sensor History - Filter by Temperature",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/sensors/history?dataType=temp&sortBy=temperature&sortOrder=DESC&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["sensors", "history"],
+              "query": [
+                {
+                  "key": "dataType",
+                  "value": "temp",
+                  "description": "Filter by temperature"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "temperature",
+                  "description": "Sort by temperature"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "DESC",
+                  "description": "Sort order"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Lọc và sắp xếp theo nhiệt độ"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sensor History - Search by Keyword",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/sensors/history?search=27&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["sensors", "history"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "27",
+                  "description": "Search keyword"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Tìm kiếm sensor data theo từ khóa"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Action History APIs",
+      "item": [
+        {
+          "name": "Get Latest Actions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actions/latest",
+              "host": ["{{base_url}}"],
+              "path": ["actions", "latest"]
+            },
+            "description": "Lấy trạng thái mới nhất của tất cả thiết bị"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Action History - All Actions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actions/history?limit=100",
+              "host": ["{{base_url}}"],
+              "path": ["actions", "history"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            },
+            "description": "Lấy tất cả lịch sử điều khiển thiết bị"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Action History - Filter by Device (Light)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actions/history?deviceFilter=Light&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["actions", "history"],
+              "query": [
+                {
+                  "key": "deviceFilter",
+                  "value": "Light",
+                  "description": "Filter by Light device"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Lọc lịch sử theo thiết bị Đèn"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Action History - Filter by Status (ON)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actions/history?actionFilter=ON&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["actions", "history"],
+              "query": [
+                {
+                  "key": "actionFilter",
+                  "value": "ON",
+                  "description": "Filter by ON status"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Lọc lịch sử theo trạng thái BẬT"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Action History - Combined Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actions/history?deviceFilter=Fan&actionFilter=ON&search=fan&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["actions", "history"],
+              "query": [
+                {
+                  "key": "deviceFilter",
+                  "value": "Fan"
+                },
+                {
+                  "key": "actionFilter",
+                  "value": "ON"
+                },
+                {
+                  "key": "search",
+                  "value": "fan"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Lọc theo nhiều điều kiện kết hợp"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device State - Light",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actions/state/Light",
+              "host": ["{{base_url}}"],
+              "path": ["actions", "state", "Light"]
+            },
+            "description": "Lấy trạng thái hiện tại của thiết bị Đèn"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device State - Fan",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actions/state/Fan",
+              "host": ["{{base_url}}"],
+              "path": ["actions", "state", "Fan"]
+            },
+            "description": "Lấy trạng thái hiện tại của thiết bị Quạt"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device State - Air Condition",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actions/state/Air condition",
+              "host": ["{{base_url}}"],
+              "path": ["actions", "state", "Air condition"]
+            },
+            "description": "Lấy trạng thái hiện tại của thiết bị Điều hòa"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Device Control APIs",
+      "item": [
+        {
+          "name": "Turn ON Light",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device\": \"led1\",\n  \"action\": \"on\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/control",
+              "host": ["{{base_url}}"],
+              "path": ["control"]
+            },
+            "description": "Bật đèn (LED1)"
+          },
+          "response": []
+        },
+        {
+          "name": "Turn OFF Light",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device\": \"led1\",\n  \"action\": \"off\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/control",
+              "host": ["{{base_url}}"],
+              "path": ["control"]
+            },
+            "description": "Tắt đèn (LED1)"
+          },
+          "response": []
+        },
+        {
+          "name": "Turn ON Fan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device\": \"led2\",\n  \"action\": \"on\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/control",
+              "host": ["{{base_url}}"],
+              "path": ["control"]
+            },
+            "description": "Bật quạt (LED2)"
+          },
+          "response": []
+        },
+        {
+          "name": "Turn OFF Fan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device\": \"led2\",\n  \"action\": \"off\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/control",
+              "host": ["{{base_url}}"],
+              "path": ["control"]
+            },
+            "description": "Tắt quạt (LED2)"
+          },
+          "response": []
+        },
+        {
+          "name": "Turn ON Air Condition",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device\": \"led3\",\n  \"action\": \"on\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/control",
+              "host": ["{{base_url}}"],
+              "path": ["control"]
+            },
+            "description": "Bật điều hòa (LED3)"
+          },
+          "response": []
+        },
+        {
+          "name": "Turn OFF Air Condition",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device\": \"led3\",\n  \"action\": \"off\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/control",
+              "host": ["{{base_url}}"],
+              "path": ["control"]
+            },
+            "description": "Tắt điều hòa (LED3)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Profile API",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            },
+            "description": "Lấy thông tin sinh viên và các links (docs, github, figma, postman, diagram)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

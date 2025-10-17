@@ -1,0 +1,300 @@
+openapi: 3.0.0
+info:
+  title: IoT Project API
+  version: 1.0.0
+  description: |
+    Tài liệu API cho hệ thống IoT (ESP32 + MQTT + Socket.IO)
+    - Base URL: `http://localhost:5000/api`
+    - Response format:
+      ```json
+      {
+        "success": true/false,
+        "data": {...},
+        "message": "optional error message"
+      }
+      ```
+
+servers:
+  - url: http://localhost:5000/api
+    description: Local development server
+
+paths:
+  /sensors/latest:
+    get:
+      summary: Lấy dữ liệu sensor mới nhất
+      description: Lấy dữ liệu sensor (nhiệt độ, độ ẩm, ánh sáng) gần nhất từ hệ thống.
+      responses:
+        '200':
+          description: Lấy dữ liệu thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id: { type: integer, example: 1 }
+                      temperature: { type: number, example: 27.5 }
+                      humidity: { type: number, example: 65.2 }
+                      light: { type: number, example: 450 }
+                      timestamp: { type: string, format: date-time, example: "2025-10-16T10:30:00.000Z" }
+
+  /sensors/history:
+    get:
+      summary: Lấy lịch sử dữ liệu sensor
+      description: Trả về lịch sử dữ liệu sensor có thể lọc, sắp xếp và giới hạn số lượng.
+      parameters:
+        - name: search
+          in: query
+          schema: { type: string }
+          description: Tìm kiếm theo từ khóa
+        - name: dataType
+          in: query
+          schema:
+            type: string
+            enum: [all, temp, hum, light, time]
+          description: Lọc theo loại dữ liệu
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [timestamp, temperature, humidity, light]
+          description: Trường sắp xếp
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: DESC
+          description: Thứ tự sắp xếp
+        - name: limit
+          in: query
+          schema: { type: integer, default: 100 }
+          description: Giới hạn số lượng bản ghi
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: integer, example: 100 }
+                        temperature: { type: number, example: 28.5 }
+                        humidity: { type: number, example: 67.3 }
+                        light: { type: number, example: 520 }
+                        timestamp: { type: string, format: date-time, example: "2025-10-16T10:30:00.000Z" }
+
+  /actions/history:
+    get:
+      summary: Lấy lịch sử điều khiển thiết bị
+      parameters:
+        - name: search
+          in: query
+          schema: { type: string }
+          description: Tìm kiếm theo từ khóa
+        - name: dataType
+          in: query
+          schema:
+            type: string
+            enum: [all, device, action, time]
+        - name: deviceFilter
+          in: query
+          schema:
+            type: string
+            enum: [all, Light, Fan, Air condition]
+        - name: actionFilter
+          in: query
+          schema:
+            type: string
+            enum: [all, ON, OFF]
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [created_at, device, action]
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: DESC
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: integer, example: 50 }
+                        device: { type: string, example: "Light" }
+                        action: { type: string, example: "on" }
+                        created_at: { type: string, format: date-time, example: "2025-10-16T10:30:00.000Z" }
+
+  /actions/latest:
+    get:
+      summary: Lấy trạng thái mới nhất của tất cả thiết bị
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        device: { type: string, example: "Light" }
+                        action: { type: string, example: "on" }
+                        created_at: { type: string, format: date-time, example: "2025-10-16T10:30:00.000Z" }
+
+  /actions/state/{device}:
+    get:
+      summary: Lấy trạng thái hiện tại của thiết bị
+      parameters:
+        - name: device
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [Light, Fan, Air condition]
+      responses:
+        '200':
+          description: Thành công hoặc không tìm thấy
+          content:
+            application/json:
+              examples:
+                found:
+                  summary: Device found
+                  value:
+                    success: true
+                    data:
+                      device: Light
+                      action: on
+                      created_at: "2025-10-16T10:30:00.000Z"
+                notFound:
+                  summary: No state found
+                  value:
+                    success: true
+                    data: null
+                    message: No state found for device
+
+  /control:
+    post:
+      summary: Điều khiển thiết bị
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [device, action]
+              properties:
+                device:
+                  type: string
+                  enum: [led1, led2, led3]
+                  description: Thiết bị (led1=Light, led2=Fan, led3=Air condition)
+                action:
+                  type: string
+                  enum: [on, off]
+      responses:
+        '200':
+          description: Điều khiển thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  message: { type: string, example: "Device led1 turned on successfully" }
+                  data:
+                    type: object
+                    properties:
+                      device: { type: string, example: "led1" }
+                      action: { type: string, example: "on" }
+                      timestamp: { type: string, format: date-time }
+        '400':
+          description: Lỗi yêu cầu không hợp lệ
+          content:
+            application/json:
+              examples:
+                invalidDevice:
+                  value:
+                    success: false
+                    message: "Invalid device. Use led1, led2, or led3"
+                invalidAction:
+                  value:
+                    success: false
+                    message: "Invalid action. Use on or off"
+        '500':
+          description: Lỗi điều khiển thiết bị
+          content:
+            application/json:
+              example:
+                success: false
+                message: "Failed to control device. Please try again."
+
+  /profile:
+    get:
+      summary: Lấy thông tin sinh viên & liên kết
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data:
+                    type: object
+                    properties:
+                      name: { type: string, example: "Nguyễn Nhật Quang" }
+                      msv: { type: string, example: "B22DCCN645" }
+                      class: { type: string, example: "D22HTT05" }
+                      phone: { type: string, example: "0936201378" }
+                      email: { type: string, example: "nnq148@gmail.com" }
+                      links:
+                        type: object
+                        properties:
+                          docs: { type: string, example: "https://docs.google.com/your-docs-link" }
+                          github: { type: string, example: "https://github.com/nnq148" }
+                          figma: { type: string, example: "https://figma.com/your-figma-link" }
+                          postman: { type: string, example: "https://postman.com/your-collection-link" }
+                          diagram: { type: string, example: "https://draw.io/your-diagram-link" }
+
+components:
+  schemas:
+    StandardResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data: { type: object }
+        message: { type: string }
+
