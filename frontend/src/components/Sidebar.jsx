@@ -7,9 +7,10 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
-    { path: '/', label: 'Dashboard', icon: '🏠' },
+    { path: '/', label: 'Home', icon: '🏠' },
     { path: '/data', label: 'Data Sensors', icon: '📊' },
     { path: '/actions', label: 'Action History', icon: '📝' },
+    { path: '/dashboard', label: 'Dashboard', icon: '📈' },
     { path: '/profile', label: 'Profile', icon: '👤' }
   ];
 

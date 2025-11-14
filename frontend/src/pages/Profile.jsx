@@ -124,16 +124,16 @@ const Profile = () => {
               </div>
             </a>
 
-            {/* Postman */}
+            {/* API Docs (Swagger) */}
             <a
-              href={profile.links.postman || profile.links.diagram}
+              href={profile.links.api || profile.links.postman || profile.links.diagram}
               target="_blank"
               rel="noopener noreferrer"
               className="group bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-2xl p-6 hover:shadow-lg transition-all hover:scale-105 flex flex-col items-center justify-center space-y-3"
             >
-              <div className="text-5xl">�</div>
+              <div className="text-5xl">📘</div>
               <div className="text-center">
-                <p className="font-bold text-gray-800 text-lg">Postman</p>
+                <p className="font-bold text-gray-800 text-lg">API Docs</p>
                 <p className="text-sm text-gray-600 underline">Link</p>
               </div>
             </a>

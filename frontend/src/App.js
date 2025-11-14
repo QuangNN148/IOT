@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import DataSensors from './pages/DataSensors';
 import ActionHistory from './pages/ActionHistory';
+import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/data" element={<DataSensors />} />
             <Route path="/actions" element={<ActionHistory />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>

@@ -166,7 +166,7 @@ const Home = () => {
               </div>
               <button
                 onClick={() => handleDeviceToggle('led1', deviceStates.led1)}
-                className={`relative inline-flex h-10 w-20 items-center rounded-full transition-colors ${deviceStates.led1 ? 'bg-black' : 'bg-gray-300'}`}
+                className={`relative inline-flex h-10 w-20 items-center rounded-full transition-colors ${deviceStates.led1 ? 'bg-green-500' : 'bg-gray-300'}`}
               >
                 <span className={`inline-block h-8 w-8 transform rounded-full bg-white transition-transform shadow-md ${deviceStates.led1 ? 'translate-x-11' : 'translate-x-1'}`} />
               </button>
@@ -181,7 +181,7 @@ const Home = () => {
               </div>
               <button
                 onClick={() => handleDeviceToggle('led2', deviceStates.led2)}
-                className={`relative inline-flex h-10 w-20 items-center rounded-full transition-colors ${deviceStates.led2 ? 'bg-black' : 'bg-gray-300'}`}
+                className={`relative inline-flex h-10 w-20 items-center rounded-full transition-colors ${deviceStates.led2 ? 'bg-green-500' : 'bg-gray-300'}`}
               >
                 <span className={`inline-block h-8 w-8 transform rounded-full bg-white transition-transform shadow-md ${deviceStates.led2 ? 'translate-x-11' : 'translate-x-1'}`} />
               </button>
@@ -196,7 +196,7 @@ const Home = () => {
               </div>
               <button
                 onClick={() => handleDeviceToggle('led3', deviceStates.led3)}
-                className={`relative inline-flex h-10 w-20 items-center rounded-full transition-colors ${deviceStates.led3 ? 'bg-black' : 'bg-gray-300'}`}
+                className={`relative inline-flex h-10 w-20 items-center rounded-full transition-colors ${deviceStates.led3 ? 'bg-green-500' : 'bg-gray-300'}`}
               >
                 <span className={`inline-block h-8 w-8 transform rounded-full bg-white transition-transform shadow-md ${deviceStates.led3 ? 'translate-x-11' : 'translate-x-1'}`} />
               </button>

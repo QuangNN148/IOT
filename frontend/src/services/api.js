@@ -107,4 +107,36 @@ export const getProfile = async () => {
   }
 };
 
+// Dashboard APIs
+
+// Lấy thống kê vượt ngưỡng của cảm biến
+export const getSensorThresholdStats = async (thresholds = {}) => {
+  try {
+    const params = new URLSearchParams();
+    if (thresholds.temperature) params.append('tempThreshold', thresholds.temperature);
+    if (thresholds.humidity) params.append('humidityThreshold', thresholds.humidity);
+    if (thresholds.light) params.append('lightThreshold', thresholds.light);
+
+    const response = await api.get(`/dashboard/sensor-threshold-stats?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching sensor threshold stats:', error);
+    throw error;
+  }
+};
+
+// Lấy thống kê bật/tắt thiết bị theo ngày
+export const getDeviceToggleStats = async (date) => {
+  try {
+    const params = new URLSearchParams();
+    if (date) params.append('date', date);
+
+    const response = await api.get(`/dashboard/device-toggle-stats?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching device toggle stats:', error);
+    throw error;
+  }
+};
+
 export default api;
